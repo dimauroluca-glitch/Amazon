@@ -1,6 +1,43 @@
 <!DOCTYPE html>
-<html lang="it" data-bs-theme="light">
+<html lang="it">
 <head>
+    <script>
+    (() => {
+      'use strict'
+      localStorage.removeItem('theme')
+      const getSystemTheme = () => {
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+      }
+      const setTheme = (theme) => {
+        document.documentElement.setAttribute('data-bs-theme', theme)
+      }
+      setTheme(getSystemTheme())
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        setTheme(getSystemTheme())
+        updateActiveButton('auto')
+      })
+      const updateActiveButton = (theme) => {
+        const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+        if (!btnToActive) return
+        document.querySelectorAll('[data-bs-theme-value]').forEach(el => el.classList.remove('active'))
+        btnToActive.classList.add('active')
+      }
+      window.addEventListener('DOMContentLoaded', () => {
+        updateActiveButton('auto')
+        document.querySelectorAll('[data-bs-theme-value]').forEach(toggle => {
+          toggle.addEventListener('click', () => {
+            const chosenTheme = toggle.getAttribute('data-bs-theme-value')
+            if (chosenTheme === 'auto') {
+              setTheme(getSystemTheme())
+            } else {
+              setTheme(chosenTheme)
+            }
+            updateActiveButton(chosenTheme)
+          })
+        })
+      })
+    })()
+  </script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,7 +46,6 @@
     <meta name="generator" content="Astro v5.13.2">
     <title>Product example · Bootstrap v5.3</title>
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/product/">
-    <script src="./Product example · Bootstrap v5.3_files/color-modes.js.download"></script>
     <link href="./Product example · Bootstrap v5.3_files/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB">
     <link rel="apple-touch-icon" href="https://getbootstrap.com/docs/5.3/assets/img/favicons/apple-touch-icon.png"
